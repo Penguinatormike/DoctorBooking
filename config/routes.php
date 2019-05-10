@@ -34,5 +34,11 @@ use Zend\Expressive\MiddlewareFactory;
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
-    $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
+
+    // Booking routes
+    $app->get('/api/booking/read', App\Handler\ReadBookingHandler::class, 'api.booking.read');
+    $app->get('/api/booking/get', App\Handler\GetBookingHandler::class, 'api.booking.get');
+    $app->post('/api/booking/create', App\Handler\CreateBookingHandler::class, 'api.booking.create');
+    $app->post('/api/booking/update', App\Handler\UpdateBookingHandler::class, 'api.booking.update');
+    $app->delete('/api/booking/delete', App\Handler\DeleteBookingHandler::class, 'api.booking.delete');
 };
