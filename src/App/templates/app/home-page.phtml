@@ -8,7 +8,7 @@
     $('foo_form').action = action;
     <?php $this->headScript()->captureEnd() ?>
     <!--  TODO: probably can be done less hacky  -->
-    <form action="<?=$this->url('api.booking', [], [
+    <form action="<?=$this->url('api.booking.read', [], [
         'handle' => 'create',
     ])?>" method="POST">
         <div class="form-group">
