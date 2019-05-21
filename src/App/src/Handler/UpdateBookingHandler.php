@@ -19,10 +19,10 @@ class UpdateBookingHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $bookingHelper = new BookingHelper((new Database())->getConnection());
-        $requestParams = $request->getQueryParams();
+        $requestBody = $request->getParsedBody();
         return $bookingHelper->updateBooking(
-            isset($requestParams['booking_id']) ? $requestParams['booking_id'] : null,
-            !empty($requestParams['data']) ? json_decode($requestParams['data'], true) : []
+            isset($requestBody['booking_id']) ? $requestBody['booking_id'] : null,
+            $requestBody
         );
     }
 

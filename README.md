@@ -10,7 +10,7 @@ POST http://localhost:8080/api/booking/create?data={"user":"sandy","reason":"iha
 
 POST http://localhost:8080/api/booking/update?booking_id=1&data={"reason":"ihave sick2","start_date":123444455,"end_date":124124444}
 
-DELETE  http://localhost:8080/api/booking/delete?booking_id=1
+POST http://localhost:8080/api/booking/delete?booking_id=1
 
 **Unit test:** vendor/bin/phpunit test/AppTest/BookingHelperTest.php
 

@@ -40,5 +40,5 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/api/booking/get', App\Handler\GetBookingHandler::class, 'api.booking.get');
     $app->post('/api/booking/create', App\Handler\CreateBookingHandler::class, 'api.booking.create');
     $app->post('/api/booking/update', App\Handler\UpdateBookingHandler::class, 'api.booking.update');
-    $app->delete('/api/booking/delete', App\Handler\DeleteBookingHandler::class, 'api.booking.delete');
+    $app->post('/api/booking/delete', App\Handler\DeleteBookingHandler::class, 'api.booking.delete');
 };

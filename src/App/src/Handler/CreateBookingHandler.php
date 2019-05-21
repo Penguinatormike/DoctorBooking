@@ -19,9 +19,8 @@ class CreateBookingHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $bookingHelper = new BookingHelper((new Database())->getConnection());
-        $requestParams = $request->getQueryParams();
         return $bookingHelper->createBooking(
-            !empty($requestParams['data']) ? json_decode($requestParams['data'], true) : []
+            !empty($request->getParsedBody()) ? $request->getParsedBody() : []
         );
     }
 

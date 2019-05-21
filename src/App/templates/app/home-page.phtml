@@ -1,28 +1,90 @@
 <?php $this->headTitle('Home'); ?>
 
-<!-- TODO: implement front end -->
-<h1>Create a booking</h1>
-<div class="row">
-    <?php $this->headScript()->captureStart() ?>
-    var action = '<?php echo $this->baseUrl ?>';
-    $('foo_form').action = action;
-    <?php $this->headScript()->captureEnd() ?>
-    <!--  TODO: probably can be done less hacky  -->
-    <form action="<?=$this->url('api.booking.read', [], [
-        'handle' => 'create',
-    ])?>" method="POST">
+<style>
+    #update,
+    #delete,
+    #read {
+        display: none;
+    }
+</style>
+
+<div id="buttons">
+    <button id="create-toggle" class="btn btn-secondary">Create</button>
+    <button id="update-toggle" class="btn btn-secondary">Update</button>
+    <button id="delete-toggle" class="btn btn-secondary">Delete</button>
+    <button id="read-toggle" class="btn btn-secondary">Read</button>
+</div>
+<div id="forms" class="row">
+    <form id="create" action="<?=$this->url('api.booking.create')?>" method="POST">
+        <h1>Create a booking</h1>
         <div class="form-group">
             <label for="user">User Name</label>
-            <input type="text" class="form-control" id="user">
+            <input type="text" name="user" class="form-control" id="user" required="required">
             <label for="reason">Reason</label>
-            <input type="text" class="form-control" id="reason">
+            <input type="text" name="reason" class="form-control" id="reason" required="required">
             <label for="start_date">Start Date</label>
-            <input type="text" class="form-control" id="start_date">
+            <input type="text" name="start_date" class="form-control" id="start_date">
             <label for="end_date">End Date</label>
-            <input type="text" class="form-control" id="end_date">
-            <label for="booking_id">Booking Id (update only)</label>
-            <input type="text" class="form-control" id="booking_id">
+            <input type="text" name="end_date" class="form-control" id="end_date">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
+    <form id="update" action="<?=$this->url('api.booking.update')?>" method="POST">
+        <h1>Update a booking</h1>
+        <div class="form-group">
+            <label for="booking_id">Booking Id</label>
+            <input type="text" name="booking_id" class="form-control" id="booking_id" required="required">
+            <label for="reason">Reason</label>
+            <input type="text" name="reason" class="form-control" id="reason" required="required">
+            <label for="start_date">Start Date</label>
+            <input type="text" name="start_date" class="form-control" id="start_date">
+            <label for="end_date">End Date</label>
+            <input type="text" name="end_date" class="form-control" id="end_date">
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+
+    <form id="delete" action="<?=$this->url('api.booking.delete')?>" method="POST">
+        <h1>Delete a booking</h1>
+        <div class="form-group">
+            <label for="booking_id">Booking Id</label>
+            <input type="text" name="booking_id" class="form-control" id="booking_id" required="required">
+        </div>
+        <button type="submit" class="btn btn-primary">Delete</button>
+    </form>
+
+    <form id="read" action="<?=$this->url('api.booking.get')?>" method="GET">
+        <h1>Read a booking</h1>
+        <div class="form-group">
+            <label for="booking_id">Booking Id</label>
+            <input type="text" name="booking_id" class="form-control" id="booking_id" required="required">
+        </div>
+        <button type="submit" class="btn btn-primary">Read</button>
+    </form>
 </div>
+
+<script>
+    // https://stackoverflow.com/a/32271772/9842191
+    let forms = document.querySelectorAll("#forms > form");
+    let formIds = [].map.call(forms, function(form) {
+        return form.id;
+    });
+
+    formIds.forEach(function (form) {
+        setUpButton(form);
+    });
+
+    function setUpButton(form) {
+        document.getElementById(form + '-toggle').onclick = function () {
+            document.getElementById(form).style.display = 'block';
+            hideAllBut(form);
+        };
+    }
+
+    function hideAllBut(id) {
+        formIds.forEach(function (form) {
+            if(id !== form) document.getElementById(form).style.display = 'none';
+        });
+    }
+</script>
