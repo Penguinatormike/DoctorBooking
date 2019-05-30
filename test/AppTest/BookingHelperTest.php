@@ -96,6 +96,9 @@ class BookingHelperTest extends TestCase
         $bk = new BookingHelper($db);
 
         // insert dummy record
+        $db->query("INSERT IGNORE INTO `user`
+            (`user_id`, `u_name`)
+            VALUES(1, 'bob')");
         $db->query("INSERT IGNORE INTO `booking`
             (`booking_id`, `bk_user_id`, `bk_reason`, `bk_start_date`, `bk_end_date`)
             VALUES(789789456, 1, 'DERP', '123', '1234')");
@@ -117,6 +120,16 @@ class BookingHelperTest extends TestCase
                 ],
                 'updated',
                 'booking id and reason is provided; update'
+            ],
+            [
+                545454545, // unlikely to occur..
+                [
+                    'reason' => 'dummy',
+                    'start_date' => 999,
+                    'end_date' => 777
+                ],
+                'error',
+                'booking id provided, but doesnt exist; failed update'
             ],
             [
                 789789456,
@@ -177,6 +190,11 @@ class BookingHelperTest extends TestCase
                 'booking id not provided; delete failed'
             ],
             [
+                54545,
+                'error',
+                'booking id provided, but doesnt exist; delete failed'
+            ],
+            [
                 55555555, // unlikely to occur..
                 'deleted',
                 'booking id provided; delete'
@@ -213,6 +231,11 @@ class BookingHelperTest extends TestCase
                 null,
                 'error',
                 'booking id not provided; get failed'
+            ],
+            [
+                54545,
+                'error',
+                'booking id provided, but doesnt exist; get failed'
             ],
             [
                 55555555, // unlikely to occur..

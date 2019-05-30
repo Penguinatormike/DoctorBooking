@@ -77,7 +77,7 @@ class BookingHelper
             );
             $stmt->execute();
             return new JsonResponse([
-                'bookings' => json_encode($stmt->fetchAll(PDO::FETCH_ASSOC) ?: []), 400
+                'bookings' => $stmt->fetchAll(PDO::FETCH_ASSOC) ?: []
             ]);
         } catch (\PDOException $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
@@ -92,6 +92,9 @@ class BookingHelper
     public function getBooking($bookingId)
     {
         try {
+            if (!$this->checkBookingExists($bookingId)) {
+                return new JsonResponse(["error" => "booking does not exists"], 400);
+            }
             $stmt = $this->db->prepare(
                 "SELECT 
                         `booking_id`,
@@ -105,13 +108,9 @@ class BookingHelper
                     ORDER BY `bk_start_date` DESC"
             );
             $stmt->execute([':booking_id' => $bookingId]);
-            if (($booking = $stmt->fetchAll(PDO::FETCH_ASSOC)) && !empty($booking)) {
-                return new JsonResponse([
-                    'bookings' => json_encode($booking), 400
-                ]);
-            } else {
-                return new JsonResponse(["error" => 'No booking found'], 400);
-            }
+            return new JsonResponse([
+                'bookings' => $stmt->fetchAll(PDO::FETCH_ASSOC)
+            ]);
         } catch (\PDOException $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
@@ -126,7 +125,10 @@ class BookingHelper
     public function updateBooking($bookingId, $data)
     {
         try {
-            if (!empty($bookingId) && !empty($data['reason'])) {
+            if (!$this->checkBookingExists($bookingId)) {
+                return new JsonResponse(["error" => "booking does not exists"], 400);
+            }
+            if (!empty($data['reason'])) {
                 return new JsonResponse(
                     [
                         'updated' => (bool)$this->db->prepare(
@@ -158,20 +160,32 @@ class BookingHelper
     public function deleteBooking($bookingId)
     {
         try {
-            if (!empty($bookingId)) {
-                return new JsonResponse(
-                    [
-                        'deleted' => (bool)$this->db->prepare(
-                            "DELETE FROM `booking` WHERE `booking_id`=:booking_id"
-                        )->execute([
-                            ':booking_id' => $bookingId
-                        ])
-                    ]
-                );
+            if (!$this->checkBookingExists($bookingId)) {
+                return new JsonResponse(["error" => "booking does not exists"], 400);
             }
-            return new JsonResponse(["error" => "Must have a booking id"], 400);
+            return new JsonResponse(
+                [
+                    'deleted' => $this->db->prepare(
+                        "DELETE FROM `booking` WHERE `booking_id`=:booking_id"
+                    )->execute([
+                        ':booking_id' => $bookingId
+                    ])
+                ]
+            );
         } catch (\PDOException $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
+    }
+
+    private function checkBookingExists($bookingId)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT 
+                `booking_id`
+            FROM `booking` 
+            WHERE `booking_id`=:booking_id"
+        );
+        $stmt->execute([':booking_id' => $bookingId]);
+        return !empty($stmt->fetchAll(PDO::FETCH_COLUMN));
     }
 }
