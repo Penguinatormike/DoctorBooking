@@ -22,7 +22,7 @@ class BookingHelperTest extends TestCase
      * @param array $data
      * @param string $expected
      * @param string $message
-     * @dataProvider testCreateBookingProvider
+     * @dataProvider createBookingProvider
      */
     public function testCreateBooking($data, $expected, $message)
     {
@@ -32,7 +32,7 @@ class BookingHelperTest extends TestCase
         $this->assertEquals($expected, array_keys($response->getPayload())[0], $message);
     }
 
-    public function testCreateBookingProvider()
+    public function createBookingProvider()
     {
         return [
             [
@@ -84,7 +84,7 @@ class BookingHelperTest extends TestCase
 
     /**
      * Test updateBooking: like testInsertData, update if possible.
-     * @dataProvider testUpdateBookingProvider
+     * @dataProvider updateBookingProvider
      * @param int $bookingId
      * @param array $data
      * @param string $expected
@@ -105,7 +105,7 @@ class BookingHelperTest extends TestCase
         $this->assertEquals($expected, array_keys($response->getPayload())[0], $message);
     }
 
-    public function testUpdateBookingProvider()
+    public function updateBookingProvider()
     {
         return [
             [
@@ -148,7 +148,7 @@ class BookingHelperTest extends TestCase
 
     /**
      * Test deleteBooking: like testInsertData, delete if possible.
-     * @dataProvider testDeleteBookingProvider
+     * @dataProvider deleteBookingProvider
      * @param int $bookingId
      * @param string $expected
      * @param string $message
@@ -168,7 +168,7 @@ class BookingHelperTest extends TestCase
         $this->assertEquals($expected, array_keys($response->getPayload())[0], $message);
     }
 
-    public function testDeleteBookingProvider()
+    public function deleteBookingProvider()
     {
         return [
             [
@@ -186,7 +186,7 @@ class BookingHelperTest extends TestCase
 
     /**
      * Test getBooking: like testInsertData, get if possible.
-     * @dataProvider testGetBookingProvider
+     * @dataProvider getBookingProvider
      * @param int $bookingId
      * @param string $expected
      * @param string $message
@@ -206,7 +206,7 @@ class BookingHelperTest extends TestCase
         $this->assertEquals($expected, array_keys($response->getPayload())[0], $message);
     }
 
-    public function testGetBookingProvider()
+    public function getBookingProvider()
     {
         return [
             [
