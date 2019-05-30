@@ -27,16 +27,18 @@ class BookingHelper
     {
         try {
             if (!empty($data['user']) && !empty($data['reason'])) {
-                $user =  trim($data['user']);
+                $user = trim($data['user']);
                 // insert user if not exist
-                $this->db->prepare(
-                    "INSERT IGNORE INTO `user` (`u_name`) VALUES (:user)"
-                )->execute([':user' => $user]);
                 $stmt = $this->db->prepare(
                     "SELECT `user_id` FROM `user` WHERE `u_name`=:user"
                 );
                 $stmt->execute([':user' => $user]);
                 $userId = $stmt->fetchColumn();
+                if (empty($userId)) {
+                    $userId = $this->db->prepare(
+                        "INSERT INTO `user` (`u_name`) VALUES (:user)"
+                    )->execute([':user' => $user]);
+                }
 
                 return new JsonResponse([
                     'created' => (bool)$this->db->prepare(
